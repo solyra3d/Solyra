@@ -217,6 +217,7 @@ class AdminProductController extends Controller
         // Upload de novas imagens
         if (!empty($_FILES['images']['name'][0])) {
             $existingCount = Database::count('product_images', 'product_id = ?', [(int) $id]);
+            $hasCover = Database::count('product_images', 'product_id = ? AND is_cover = 1', [(int) $id]) > 0;
             $results = Upload::multiple($_FILES['images'], 'products');
             $order = $existingCount;
 
@@ -225,9 +226,10 @@ class AdminProductController extends Controller
                     Database::insert('product_images', [
                         'product_id' => (int) $id,
                         'image_path' => $result['path'],
-                        'is_cover' => $existingCount === 0 ? 1 : 0,
+                        'is_cover' => (!$hasCover && $existingCount === 0) ? 1 : 0,
                         'order_position' => $order++,
                     ]);
+                    $hasCover = true;
                     $existingCount++;
                 }
             }
