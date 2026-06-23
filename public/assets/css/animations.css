@@ -1,0 +1,180 @@
+/* =============================================
+   SOLYRA - Animations
+   Futuristic, elegant, subtle
+   ============================================= */
+
+/* Fade In Up */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade In */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Scale In */
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Glow Pulse */
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.2); }
+    50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.4); }
+}
+
+/* Gradient Shift */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Float */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Slide In Right */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* =============================================
+   SCROLL REVEAL CLASSES
+   ============================================= */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* =============================================
+   HOVER EFFECTS
+   ============================================= */
+.hover-lift {
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow);
+}
+
+.hover-glow {
+    transition: box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+.hover-scale {
+    transition: transform var(--transition-base);
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+/* =============================================
+   GRADIENT ANIMATIONS
+   ============================================= */
+.animate-gradient {
+    background-size: 200% 200%;
+    animation: gradientShift 6s ease infinite;
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow {
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+/* =============================================
+   LOADING / SKELETON
+   ============================================= */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, var(--color-bg-elevated) 25%, var(--color-bg-secondary) 50%, var(--color-bg-elevated) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-md);
+}
+
+/* =============================================
+   LAZY LOAD IMAGES
+   ============================================= */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity var(--transition-slow);
+}
+
+img[loading="lazy"].loaded,
+img[loading="lazy"][src] {
+    opacity: 1;
+}
+
+/* =============================================
+   PAGE TRANSITIONS
+   ============================================= */
+.page-enter {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* =============================================
+   REDUCED MOTION
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
