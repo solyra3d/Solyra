@@ -76,7 +76,7 @@
                     <div class="admin-image-item">
                         <img src="<?= e(baseUrl($img['image_path'])) ?>" alt="Produto">
                         <button type="button" class="delete-btn" style="position:absolute;top:4px;right:4px;"
-                                onclick="deleteImage('<?= baseUrl('admin/produtos/imagem-deletar/' . $img['id']) ?>')">&times;</button>
+                                onclick="deleteImage('/admin/produtos/imagem-deletar/<?= $img['id'] ?>')">&times;</button>
                         <?php if ($img['is_cover']): ?>
                             <span class="badge badge-gold" style="position:absolute;bottom:4px;left:4px;font-size:10px;">Capa</span>
                         <?php endif; ?>
