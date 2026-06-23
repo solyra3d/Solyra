@@ -75,10 +75,8 @@
                 <?php foreach ($images as $img): ?>
                     <div class="admin-image-item">
                         <img src="<?= e(baseUrl($img['image_path'])) ?>" alt="Produto">
-                        <form method="POST" action="<?= baseUrl('admin/produtos/imagem-deletar/' . $img['id']) ?>" style="position:absolute;top:4px;right:4px;" onsubmit="return confirm('Remover esta imagem?')">
-                            <?= csrfField() ?>
-                            <button type="submit" class="delete-btn">&times;</button>
-                        </form>
+                        <button type="button" class="delete-btn" style="position:absolute;top:4px;right:4px;"
+                                onclick="deleteImage('<?= baseUrl('admin/produtos/imagem-deletar/' . $img['id']) ?>')">&times;</button>
                         <?php if ($img['is_cover']): ?>
                             <span class="badge badge-gold" style="position:absolute;bottom:4px;left:4px;font-size:10px;">Capa</span>
                         <?php endif; ?>
@@ -124,3 +122,17 @@
         <a href="<?= $backUrl ?>" class="btn btn-ghost">Cancelar</a>
     </div>
 </form>
+
+<script>
+function deleteImage(url) {
+    if (!confirm('Remover esta imagem?')) return;
+    fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: '_csrf_token=<?= csrfToken() ?>'
+    }).then(function(r) {
+        if (r.ok || r.redirected) { location.reload(); }
+        else { alert('Erro ao remover imagem. Tente novamente.'); }
+    }).catch(function() { alert('Erro de conexão.'); });
+}
+</script>
