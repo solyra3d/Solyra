@@ -75,10 +75,10 @@
                 <?php foreach ($images as $img): ?>
                     <div class="admin-image-item">
                         <img src="<?= e(baseUrl($img['image_path'])) ?>" alt="Produto">
-                        <a href="<?= baseUrl('admin/produtos/imagem-deletar/' . $img['id']) ?>" 
-                           class="delete-btn" 
-                           data-confirm="Remover esta imagem?"
-                           onclick="event.preventDefault(); if(confirm(this.dataset.confirm)){let f=document.createElement('form');f.method='POST';f.action=this.href;f.innerHTML='<?= csrfField() ?>';document.body.appendChild(f);f.submit();}">&times;</a>
+                        <form method="POST" action="<?= baseUrl('admin/produtos/imagem-deletar/' . $img['id']) ?>" style="position:absolute;top:4px;right:4px;" onsubmit="return confirm('Remover esta imagem?')">
+                            <?= csrfField() ?>
+                            <button type="submit" class="delete-btn">&times;</button>
+                        </form>
                         <?php if ($img['is_cover']): ?>
                             <span class="badge badge-gold" style="position:absolute;bottom:4px;left:4px;font-size:10px;">Capa</span>
                         <?php endif; ?>
