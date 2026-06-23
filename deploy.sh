@@ -148,8 +148,8 @@ ok "schema.sql executado"
 mysql -u root "$DB_NAME" < database/seed.sql
 ok "seed.sql executado"
 
-# CMS tables
-for f in database/008_create_cms_tables.sql database/009_seed_cms_data.sql; do
+# Additional migrations
+for f in database/migration_v2.sql database/008_create_cms_tables.sql database/009_seed_cms_data.sql; do
     [ -f "$f" ] && mysql -u root "$DB_NAME" < "$f" 2>/dev/null && ok "$f executado" || true
 done
 
@@ -211,7 +211,7 @@ server {
 
     # Rewrite para index.php (MVC)
     location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
+        try_files \$uri \$uri/ /index.php?url=\$uri&\$query_string;
     }
 
     # PHP-FPM

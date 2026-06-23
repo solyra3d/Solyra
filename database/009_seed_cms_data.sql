@@ -5,7 +5,8 @@
 -- HOME - Hero
 INSERT INTO page_contents (page, section, content_key, content_value, content_type) VALUES
 ('home', 'hero', 'badge', 'Impressão 3D Premium', 'text'),
-('home', 'hero', 'title', 'Luminárias e peças<br><span class="text-gradient">que encantam</span>', 'text'),
+('home', 'hero', 'title', 'Luminárias e peças', 'text'),
+('home', 'hero', 'title_highlight', 'que encantam', 'text'),
 ('home', 'hero', 'description', 'Design exclusivo, tecnologia de ponta e acabamento impecável. Cada peça é criada para transformar ambientes.', 'textarea'),
 ('home', 'hero', 'btn_primary', 'Ver Catálogo', 'text'),
 ('home', 'hero', 'btn_secondary', 'Solicitar Orçamento', 'text');
