@@ -24,24 +24,43 @@
         <div class="product-layout">
             <!-- Gallery -->
             <div class="product-gallery">
-                <!-- Main Image -->
+                <!-- Main Media -->
                 <div class="product-gallery-main" id="gallery-main">
-                    <?php if (!empty($product['images'])): ?>
-                        <img src="<?= e(baseUrl($product['images'][0]['image_path'])) ?>" alt="<?= e($product['name']) ?>" id="gallery-main-img">
+                    <?php if (!empty($product['video_path'])): ?>
+                        <video id="gallery-main-video"
+                               src="<?= e(baseUrl($product['video_path'])) ?>"
+                               autoplay muted loop playsinline
+                               style="width:100%;height:100%;object-fit:contain;"></video>
+                        <?php if (!empty($product['images'])): ?>
+                            <img src="<?= e(baseUrl($product['images'][0]['image_path'])) ?>"
+                                 alt="<?= e($product['name']) ?>" id="gallery-main-img" style="display:none;">
+                        <?php endif; ?>
+                    <?php elseif (!empty($product['images'])): ?>
+                        <img src="<?= e(baseUrl($product['images'][0]['image_path'])) ?>"
+                             alt="<?= e($product['name']) ?>" id="gallery-main-img">
                     <?php else: ?>
                         <div class="product-gallery-placeholder">
                             <svg width="80" height="80" viewBox="0 0 24 24" fill="var(--color-text-muted)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
                         </div>
                     <?php endif; ?>
                 </div>
-                
+
                 <!-- Thumbnails -->
-                <?php if (!empty($product['images']) && count($product['images']) > 1): ?>
+                <?php $hasVideo = !empty($product['video_path']); $hasImages = !empty($product['images']); ?>
+                <?php if ($hasVideo || ($hasImages && count($product['images']) > 1)): ?>
                     <div class="product-gallery-thumbs">
+                        <?php if ($hasVideo): ?>
+                            <button class="gallery-thumb active" onclick="switchToVideo(this)" title="Ver vídeo 3D">
+                                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--color-bg-secondary);border-radius:4px;">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--color-primary)"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </button>
+                        <?php endif; ?>
                         <?php foreach ($product['images'] as $index => $img): ?>
-                            <button class="gallery-thumb <?= $index === 0 ? 'active' : '' ?>" 
-                                    onclick="changeGalleryImage('<?= e(baseUrl($img['image_path'])) ?>', this)">
-                                <img src="<?= e(baseUrl($img['image_path'])) ?>" alt="<?= e($product['name']) ?> - Imagem <?= $index + 1 ?>" loading="lazy">
+                            <button class="gallery-thumb <?= ($index === 0 && !$hasVideo) ? 'active' : '' ?>"
+                                    onclick="switchToImage('<?= e(baseUrl($img['image_path'])) ?>', this)">
+                                <img src="<?= e(baseUrl($img['image_path'])) ?>"
+                                     alt="<?= e($product['name']) ?> - <?= $index + 1 ?>" loading="lazy">
                             </button>
                         <?php endforeach; ?>
                     </div>
@@ -122,8 +141,26 @@
 
 <!-- Gallery JS -->
 <script>
-function changeGalleryImage(src, thumb) {
-    document.getElementById('gallery-main-img').src = src;
+function switchToVideo(thumb) {
+    var video = document.getElementById('gallery-main-video');
+    var img = document.getElementById('gallery-main-img');
+    if (img) img.style.display = 'none';
+    if (video) { video.style.display = ''; video.play(); }
+    document.querySelectorAll('.gallery-thumb').forEach(function(t) { t.classList.remove('active'); });
+    thumb.classList.add('active');
+}
+
+function switchToImage(src, thumb) {
+    var video = document.getElementById('gallery-main-video');
+    var img = document.getElementById('gallery-main-img');
+    if (video) { video.pause(); video.style.display = 'none'; }
+    if (!img) {
+        img = document.createElement('img');
+        img.id = 'gallery-main-img';
+        document.getElementById('gallery-main').appendChild(img);
+    }
+    img.src = src;
+    img.style.display = '';
     document.querySelectorAll('.gallery-thumb').forEach(function(t) { t.classList.remove('active'); });
     thumb.classList.add('active');
 }

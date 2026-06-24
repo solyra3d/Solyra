@@ -142,6 +142,14 @@ class AdminProductController extends Controller
 
         $productId = $this->product->create($data);
 
+        // Upload de vídeo
+        if (!empty($_FILES['video']['name'])) {
+            $videoResult = Upload::video($_FILES['video'], 'products/videos');
+            if ($videoResult['success']) {
+                $this->product->update($productId, ['video_path' => $videoResult['path']]);
+            }
+        }
+
         // Upload de imagens
         if (!empty($_FILES['images']['name'][0])) {
             $results = Upload::multiple($_FILES['images'], 'products');
@@ -212,6 +220,17 @@ class AdminProductController extends Controller
             'seo_description' => $this->input('seo_description'),
         ];
 
+        // Upload de novo vídeo
+        if (!empty($_FILES['video']['name'])) {
+            if (!empty($product['video_path'])) {
+                Upload::deleteFile($product['video_path']);
+            }
+            $videoResult = Upload::video($_FILES['video'], 'products/videos');
+            if ($videoResult['success']) {
+                $data['video_path'] = $videoResult['path'];
+            }
+        }
+
         $this->product->update((int) $id, $data);
 
         // Upload de novas imagens
@@ -246,7 +265,10 @@ class AdminProductController extends Controller
         $product = $this->product->findById((int) $id);
         $categoryId = $product['category_id'] ?? null;
 
-        // Deletar imagens do disco
+        // Deletar vídeo e imagens do disco
+        if (!empty($product['video_path'])) {
+            Upload::deleteFile($product['video_path']);
+        }
         $images = $this->product->getImages((int) $id);
         foreach ($images as $img) {
             Upload::deleteFile($img['image_path']);
@@ -291,6 +313,20 @@ class AdminProductController extends Controller
         }
 
         Session::flash('success', 'Imagem removida!');
+        redirect($_SERVER['HTTP_REFERER'] ?? '/admin/produtos');
+    }
+
+    public function deleteVideo(string $id): void
+    {
+        $this->validateCsrf();
+
+        $product = $this->product->findById((int) $id);
+        if ($product && !empty($product['video_path'])) {
+            Upload::deleteFile($product['video_path']);
+            $this->product->update((int) $id, ['video_path' => null]);
+        }
+
+        Session::flash('success', 'Vídeo removido!');
         redirect($_SERVER['HTTP_REFERER'] ?? '/admin/produtos');
     }
 }

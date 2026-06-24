@@ -13,7 +13,14 @@ class Upload
         'image/webp' => 'webp',
     ];
 
+    private static array $allowedVideoTypes = [
+        'video/mp4' => 'mp4',
+        'video/webm' => 'webm',
+        'video/quicktime' => 'mov',
+    ];
+
     private static int $maxFileSize = 5242880; // 5MB padrão
+    private static int $maxVideoSize = 52428800; // 50MB
 
     /**
      * Upload de arquivo único
@@ -65,6 +72,52 @@ class Upload
             'success' => true,
             'filename' => $filename,
             'path' => $relativePath,
+            'full_path' => $fullPath,
+            'mime_type' => $mimeType,
+            'size' => $file['size'],
+        ];
+    }
+
+    /**
+     * Upload de vídeo único (MP4, WebM, MOV)
+     */
+    public static function video(array $file, string $directory, ?int $maxSize = null): array
+    {
+        $maxSize = $maxSize ?? self::$maxVideoSize;
+
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            return ['success' => false, 'error' => self::getUploadError($file['error'])];
+        }
+
+        if ($file['size'] > $maxSize) {
+            return ['success' => false, 'error' => 'Vídeo excede o tamanho máximo de 50MB.'];
+        }
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($file['tmp_name']);
+
+        if (!isset(self::$allowedVideoTypes[$mimeType])) {
+            return ['success' => false, 'error' => 'Tipo de vídeo não permitido. Use MP4 ou WebM.'];
+        }
+
+        $extension = self::$allowedVideoTypes[$mimeType];
+        $filename = self::generateFilename($extension);
+
+        $uploadPath = ROOT_PATH . '/public/uploads/' . trim($directory, '/');
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        $fullPath = $uploadPath . '/' . $filename;
+
+        if (!move_uploaded_file($file['tmp_name'], $fullPath)) {
+            return ['success' => false, 'error' => 'Erro ao salvar vídeo.'];
+        }
+
+        return [
+            'success' => true,
+            'filename' => $filename,
+            'path' => 'uploads/' . trim($directory, '/') . '/' . $filename,
             'full_path' => $fullPath,
             'mime_type' => $mimeType,
             'size' => $file['size'],

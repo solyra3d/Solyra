@@ -93,6 +93,29 @@
         <div id="image-preview" class="admin-images-grid"></div>
     </div>
 
+    <!-- Vídeo 3D -->
+    <div class="form-group" style="margin-top: var(--space-6);">
+        <label class="form-label">Vídeo 3D do Produto <span style="font-weight:400;color:var(--color-text-muted);">(MP4 ou WebM — máx 50MB)</span></label>
+
+        <?php if ($isEdit && !empty($product['video_path'])): ?>
+            <div style="margin-bottom:var(--space-4); position:relative; display:inline-block;">
+                <video src="<?= e(baseUrl($product['video_path'])) ?>" autoplay muted loop playsinline
+                       style="max-width:280px; border-radius:8px; display:block;"></video>
+                <button type="button" class="delete-btn" style="position:absolute;top:4px;right:4px;"
+                        onclick="deleteVideo('/admin/produtos/video-deletar/<?= $product['id'] ?>')">&times;</button>
+            </div>
+        <?php endif; ?>
+
+        <div class="admin-upload-area" onclick="document.getElementById('product-video').click()">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="var(--color-text-muted)"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+            <p><?= ($isEdit && !empty($product['video_path'])) ? 'Substituir vídeo atual' : 'Clique para fazer upload do vídeo' ?></p>
+        </div>
+        <input type="file" id="product-video" name="video" accept="video/mp4,video/webm,video/quicktime" style="display:none;" onchange="previewVideo(this)">
+        <div id="video-preview" style="display:none; margin-top:var(--space-3);">
+            <video id="video-preview-player" autoplay muted loop playsinline style="max-width:280px; border-radius:8px;"></video>
+        </div>
+    </div>
+
     <!-- SEO -->
     <details style="margin-top: var(--space-6);">
         <summary style="cursor:pointer; font-weight:600; margin-bottom: var(--space-4);">SEO (Opcional)</summary>
@@ -124,6 +147,26 @@
 </form>
 
 <script>
+function previewVideo(input) {
+    if (input.files && input.files[0]) {
+        var player = document.getElementById('video-preview-player');
+        player.src = URL.createObjectURL(input.files[0]);
+        document.getElementById('video-preview').style.display = 'block';
+    }
+}
+
+function deleteVideo(url) {
+    if (!confirm('Remover o vídeo deste produto?')) return;
+    fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: '_csrf_token=<?= csrfToken() ?>'
+    }).then(function(r) {
+        if (r.ok || r.redirected) { location.reload(); }
+        else { alert('Erro ao remover vídeo.'); }
+    }).catch(function() { alert('Erro de conexão.'); });
+}
+
 function deleteImage(url) {
     if (!confirm('Remover esta imagem?')) return;
     fetch(url, {
