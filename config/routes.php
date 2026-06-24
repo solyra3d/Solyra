@@ -112,14 +112,9 @@ $router->group('admin', 'auth', function ($router) {
     $router->post('/galeria', 'AdminGalleryController', 'store', 'admin.gallery.store');
     $router->post('/galeria/deletar/{id}', 'AdminGalleryController', 'delete', 'admin.gallery.delete');
 
-    // Pronta Entrega
+    // Pronta Entrega (somente listagem + ajuste de estoque via AdminProductController)
     $router->get('/pronta-entrega', 'AdminReadyProductController', 'index', 'admin.ready');
-    $router->get('/pronta-entrega/criar', 'AdminReadyProductController', 'create', 'admin.ready.create');
-    $router->post('/pronta-entrega/criar', 'AdminReadyProductController', 'store', 'admin.ready.store');
-    $router->get('/pronta-entrega/editar/{id}', 'AdminReadyProductController', 'edit', 'admin.ready.edit');
-    $router->post('/pronta-entrega/editar/{id}', 'AdminReadyProductController', 'update', 'admin.ready.update');
-    $router->post('/pronta-entrega/deletar/{id}', 'AdminReadyProductController', 'delete', 'admin.ready.delete');
-    $router->post('/pronta-entrega/imagem-deletar/{id}', 'AdminReadyProductController', 'deleteImage', 'admin.ready.deleteImage');
+    $router->post('/produtos/estoque/{id}', 'AdminProductController', 'adjustStock', 'admin.products.adjustStock');
 
     // Portfólio
     $router->get('/portfolio', 'AdminPortfolioController', 'index', 'admin.portfolio');

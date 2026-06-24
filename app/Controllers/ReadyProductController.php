@@ -2,43 +2,37 @@
 
 class ReadyProductController extends Controller
 {
-    private ReadyProduct $model;
+    private Product $product;
 
     public function __construct()
     {
-        $this->model = new ReadyProduct();
+        $this->product = new Product();
     }
 
-    /**
-     * Listagem de produtos pronta entrega
-     */
     public function index(): void
     {
-        $page = (int) ($_GET['page'] ?? 1);
+        $page   = max(1, (int) ($_GET['page'] ?? 1));
         $search = trim($_GET['q'] ?? '');
 
-        $products = $this->model->findAvailable($page, 12, $search ?: null);
+        $products   = $this->product->findReadyDelivery($page, 12, $search ?: null);
         $categories = (new Category())->findActive('order_position ASC');
 
         $this->view('ready/index', [
-            'products' => $products,
+            'products'   => $products,
             'categories' => $categories,
-            'search' => $search,
+            'search'     => $search,
             'seo' => [
-                'title' => 'Pronta Entrega - SOLYRA',
+                'title'       => 'Pronta Entrega - SOLYRA',
                 'description' => 'Produtos de impressão 3D prontos para envio imediato. Luminárias, brindes e peças decorativas disponíveis.',
             ],
         ]);
     }
 
-    /**
-     * Detalhe do produto pronta entrega
-     */
     public function show(string $slug): void
     {
-        $product = $this->model->findFullBySlug($slug);
+        $product = $this->product->findFullBySlug($slug);
 
-        if (!$product) {
+        if (!$product || !$product['is_ready_delivery'] || $product['stock_quantity'] <= 0) {
             http_response_code(404);
             include ROOT_PATH . '/app/Views/errors/404.php';
             return;
@@ -47,8 +41,9 @@ class ReadyProductController extends Controller
         $this->view('ready/show', [
             'product' => $product,
             'seo' => [
-                'title' => $product['name'] . ' - Pronta Entrega | SOLYRA',
+                'title'       => $product['name'] . ' - Pronta Entrega | SOLYRA',
                 'description' => $product['short_description'] ?? $product['name'],
+                'image'       => !empty($product['images']) ? baseUrl($product['images'][0]['image_path']) : '',
             ],
         ]);
     }

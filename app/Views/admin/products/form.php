@@ -41,6 +41,26 @@
         <textarea id="description" name="description" class="form-control" rows="6" placeholder="Descrição detalhada do produto..."><?= e($isEdit ? ($product['description'] ?? '') : '') ?></textarea>
     </div>
 
+    <!-- Pronta Entrega -->
+    <div class="form-group" style="margin-top:var(--space-4); padding:var(--space-5); background:var(--color-bg-elevated); border-radius:var(--radius-lg); border:1px solid var(--color-border);">
+        <div class="flex gap-2" style="align-items:center; margin-bottom:var(--space-4);">
+            <label class="toggle-switch">
+                <input type="checkbox" name="is_ready_delivery" id="ready-delivery-toggle" value="1"
+                       <?= ($isEdit && !empty($product['is_ready_delivery'])) ? 'checked' : '' ?>
+                       onchange="document.getElementById('stock-field').style.display=this.checked?'block':'none'">
+                <span class="toggle-slider"></span>
+            </label>
+            <span style="font-weight:600;">📦 Disponível para Pronta Entrega</span>
+        </div>
+        <div id="stock-field" style="display:<?= ($isEdit && !empty($product['is_ready_delivery'])) ? 'block' : 'none' ?>;">
+            <label class="form-label">Quantidade em estoque *</label>
+            <input type="number" name="stock_quantity" class="form-control" min="0" style="max-width:180px;"
+                   value="<?= e($isEdit ? (int)($product['stock_quantity'] ?? 0) : 0) ?>"
+                   placeholder="0">
+            <small style="color:var(--color-text-muted); margin-top:4px; display:block;">Quando chegar a 0, sai automaticamente da Pronta Entrega.</small>
+        </div>
+    </div>
+
     <!-- Especificações Técnicas -->
     <details open style="margin-top: var(--space-6); background: var(--color-bg-elevated); border-radius: var(--radius-lg); padding: var(--space-6); border: 1px solid var(--color-border);">
         <summary style="cursor:pointer; font-weight:700; font-size:var(--text-base); margin-bottom: var(--space-5); list-style:none; display:flex; align-items:center; gap:var(--space-2);">

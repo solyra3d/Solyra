@@ -39,7 +39,7 @@
                             <?php endif; ?>
                             <div class="product-card-badges">
                                 <span class="badge badge-new">Pronta Entrega</span>
-                                <?php if ($product['stock_quantity'] <= 3): ?>
+                                <?php if ((int)$product['stock_quantity'] <= 3): ?>
                                     <span class="badge badge-featured">Últimas unidades</span>
                                 <?php endif; ?>
                             </div>
@@ -49,9 +49,13 @@
                                 <span class="product-card-category"><?= e($product['category_name']) ?></span>
                             <?php endif; ?>
                             <h3 class="product-card-title"><?= e($product['name']) ?></h3>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-2);">
-                                <span class="product-card-price"><?= formatPrice((float)$product['price']) ?></span>
-                                <span style="font-size: var(--text-xs); color: var(--color-text-muted);"><?= (int)$product['stock_quantity'] ?> em estoque</span>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:var(--space-2);">
+                                <?php if (!empty($product['price_from'])): ?>
+                                    <span class="product-card-price"><?= formatPrice((float)$product['price_from']) ?></span>
+                                <?php else: ?>
+                                    <span class="product-card-price" style="color:var(--color-text-muted);">Sob consulta</span>
+                                <?php endif; ?>
+                                <span style="font-size:var(--text-xs); color:var(--color-text-muted);"><?= (int)$product['stock_quantity'] ?> em estoque</span>
                             </div>
                             <div class="product-card-actions">
                                 <a href="<?= baseUrl('pronta-entrega/' . $product['slug']) ?>" class="btn btn-primary btn-sm">Comprar</a>

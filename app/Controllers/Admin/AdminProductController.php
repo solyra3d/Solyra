@@ -145,6 +145,8 @@ class AdminProductController extends Controller
             'spec_led' => $this->input('spec_led') ?: null,
             'spec_production' => $this->input('spec_production') ?: null,
             'spec_warranty' => $this->input('spec_warranty') ?: null,
+            'is_ready_delivery' => isset($_POST['is_ready_delivery']) ? 1 : 0,
+            'stock_quantity' => (int) $this->input('stock_quantity'),
         ];
 
         $productId = $this->product->create($data);
@@ -232,6 +234,8 @@ class AdminProductController extends Controller
             'spec_led' => $this->input('spec_led') ?: null,
             'spec_production' => $this->input('spec_production') ?: null,
             'spec_warranty' => $this->input('spec_warranty') ?: null,
+            'is_ready_delivery' => isset($_POST['is_ready_delivery']) ? 1 : 0,
+            'stock_quantity' => (int) $this->input('stock_quantity'),
         ];
 
         // Upload de novo vídeo
@@ -328,6 +332,17 @@ class AdminProductController extends Controller
 
         Session::flash('success', 'Imagem removida!');
         redirect($_SERVER['HTTP_REFERER'] ?? '/admin/produtos');
+    }
+
+    public function adjustStock(string $id): void
+    {
+        $this->validateCsrf();
+
+        $qty = max(0, (int) $this->input('stock_quantity'));
+        $this->product->update((int) $id, ['stock_quantity' => $qty]);
+
+        Session::flash('success', 'Estoque atualizado!');
+        redirect('/admin/pronta-entrega');
     }
 
     public function deleteVideo(string $id): void

@@ -153,6 +153,62 @@ class Product extends Model
     }
 
     /**
+     * Pronta Entrega: produtos ativos com estoque > 0 (paginado)
+     */
+    public function findReadyDelivery(int $page = 1, int $perPage = 12, ?string $search = null): array
+    {
+        $where = 'p.is_active = 1 AND p.is_ready_delivery = 1 AND p.stock_quantity > 0';
+        $params = [];
+
+        if ($search) {
+            $where .= ' AND (p.name LIKE ? OR p.short_description LIKE ?)';
+            $params[] = "%{$search}%";
+            $params[] = "%{$search}%";
+        }
+
+        $total = Database::count('products p', $where, $params);
+        $totalPages = (int) ceil($total / $perPage);
+        $offset = ($page - 1) * $perPage;
+
+        $items = Database::fetchAll(
+            "SELECT p.*, c.name as category_name, c.slug as category_slug,
+                    (SELECT image_path FROM product_images WHERE product_id = p.id AND is_cover = 1 LIMIT 1) as cover_image
+             FROM products p
+             LEFT JOIN categories c ON c.id = p.category_id
+             WHERE {$where}
+             ORDER BY p.is_featured DESC, p.stock_quantity ASC, p.created_at DESC
+             LIMIT ? OFFSET ?",
+            array_merge($params, [$perPage, $offset])
+        );
+
+        return [
+            'items'        => $items,
+            'total'        => $total,
+            'current_page' => $page,
+            'total_pages'  => $totalPages,
+            'has_prev'     => $page > 1,
+            'has_next'     => $page < $totalPages,
+        ];
+    }
+
+    /**
+     * Pronta Entrega: destaques para home
+     */
+    public function findFeaturedReady(int $limit = 4): array
+    {
+        return Database::fetchAll(
+            "SELECT p.*, c.name as category_name, c.slug as category_slug,
+                    (SELECT image_path FROM product_images WHERE product_id = p.id AND is_cover = 1 LIMIT 1) as cover_image
+             FROM products p
+             LEFT JOIN categories c ON c.id = p.category_id
+             WHERE p.is_active = 1 AND p.is_ready_delivery = 1 AND p.is_featured = 1 AND p.stock_quantity > 0
+             ORDER BY p.created_at DESC
+             LIMIT ?",
+            [$limit]
+        );
+    }
+
+    /**
      * Buscar imagens de um produto
      */
     public function getImages(int $productId): array
