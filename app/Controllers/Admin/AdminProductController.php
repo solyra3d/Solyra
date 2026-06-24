@@ -138,6 +138,13 @@ class AdminProductController extends Controller
             'is_active' => isset($_POST['is_active']) ? 1 : 0,
             'seo_title' => $this->input('seo_title'),
             'seo_description' => $this->input('seo_description'),
+            'spec_includes' => $this->input('spec_includes') ?: null,
+            'spec_dimensions' => $this->input('spec_dimensions') ?: null,
+            'spec_colors' => $this->input('spec_colors') ?: null,
+            'spec_material' => $this->input('spec_material') ?: null,
+            'spec_led' => $this->input('spec_led') ?: null,
+            'spec_production' => $this->input('spec_production') ?: null,
+            'spec_warranty' => $this->input('spec_warranty') ?: null,
         ];
 
         $productId = $this->product->create($data);
@@ -218,6 +225,13 @@ class AdminProductController extends Controller
             'is_active' => isset($_POST['is_active']) ? 1 : 0,
             'seo_title' => $this->input('seo_title'),
             'seo_description' => $this->input('seo_description'),
+            'spec_includes' => $this->input('spec_includes') ?: null,
+            'spec_dimensions' => $this->input('spec_dimensions') ?: null,
+            'spec_colors' => $this->input('spec_colors') ?: null,
+            'spec_material' => $this->input('spec_material') ?: null,
+            'spec_led' => $this->input('spec_led') ?: null,
+            'spec_production' => $this->input('spec_production') ?: null,
+            'spec_warranty' => $this->input('spec_warranty') ?: null,
         ];
 
         // Upload de novo vídeo

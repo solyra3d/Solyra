@@ -65,7 +65,37 @@
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-            </div>
+
+                <!-- Ficha Técnica -->
+                <?php
+                $specs = [
+                    ['icon' => '📦', 'label' => 'O que acompanha', 'value' => $product['spec_includes'] ?? null],
+                    ['icon' => '📏', 'label' => 'Medidas',          'value' => $product['spec_dimensions'] ?? null],
+                    ['icon' => '🎨', 'label' => 'Cores disponíveis','value' => $product['spec_colors'] ?? null],
+                    ['icon' => '🖨️', 'label' => 'Material',         'value' => $product['spec_material'] ?? null],
+                    ['icon' => '💡', 'label' => 'LED recomendado',  'value' => $product['spec_led'] ?? null],
+                    ['icon' => '🚚', 'label' => 'Prazo de produção','value' => $product['spec_production'] ?? null],
+                    ['icon' => '🛡️', 'label' => 'Garantia',         'value' => $product['spec_warranty'] ?? null],
+                ];
+                $activeSpecs = array_filter($specs, fn($s) => !empty($s['value']));
+                ?>
+                <?php if (!empty($activeSpecs)): ?>
+                <div style="margin-top:var(--space-6); border-top:1px solid var(--color-border); padding-top:var(--space-5);">
+                    <h4 style="font-size:var(--text-xs); font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--color-text-muted); margin-bottom:var(--space-4);">Ficha Técnica</h4>
+                    <div style="display:flex; flex-direction:column; gap:var(--space-2);">
+                        <?php foreach ($activeSpecs as $spec): ?>
+                        <div style="display:flex; align-items:flex-start; gap:var(--space-3); padding:var(--space-3) var(--space-4); background:var(--color-bg-elevated); border-radius:var(--radius-md); border:1px solid var(--color-border);">
+                            <span style="font-size:1.1rem; flex-shrink:0; line-height:1.4;"><?= $spec['icon'] ?></span>
+                            <div style="display:flex; flex-direction:column; gap:2px; min-width:0;">
+                                <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:var(--color-text-muted);"><?= $spec['label'] ?></span>
+                                <span style="font-size:var(--text-sm); color:var(--color-text-primary); line-height:1.4;"><?= e($spec['value']) ?></span>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div><!-- /product-gallery -->
 
             <!-- Product Info -->
             <div class="product-info">

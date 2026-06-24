@@ -41,6 +41,51 @@
         <textarea id="description" name="description" class="form-control" rows="6" placeholder="Descrição detalhada do produto..."><?= e($isEdit ? ($product['description'] ?? '') : '') ?></textarea>
     </div>
 
+    <!-- Especificações Técnicas -->
+    <details open style="margin-top: var(--space-6); background: var(--color-bg-elevated); border-radius: var(--radius-lg); padding: var(--space-6); border: 1px solid var(--color-border);">
+        <summary style="cursor:pointer; font-weight:700; font-size:var(--text-base); margin-bottom: var(--space-5); list-style:none; display:flex; align-items:center; gap:var(--space-2);">
+            📋 Ficha Técnica
+            <span style="font-size:var(--text-xs); font-weight:400; color:var(--color-text-muted);">(aparece abaixo das fotos na página do produto)</span>
+        </summary>
+        <div class="admin-form-grid">
+            <div class="form-group">
+                <label class="form-label">📦 O que acompanha</label>
+                <input type="text" name="spec_includes" class="form-control" placeholder="Ex: 1 porta-velas + vela LED"
+                       value="<?= e($isEdit ? ($product['spec_includes'] ?? '') : '') ?>">
+            </div>
+            <div class="form-group">
+                <label class="form-label">📏 Medidas</label>
+                <input type="text" name="spec_dimensions" class="form-control" placeholder="Ex: 20 cm alt. × 8 cm larg."
+                       value="<?= e($isEdit ? ($product['spec_dimensions'] ?? '') : '') ?>">
+            </div>
+            <div class="form-group">
+                <label class="form-label">🎨 Cores disponíveis</label>
+                <input type="text" name="spec_colors" class="form-control" placeholder="Ex: Branco, Preto, Verde"
+                       value="<?= e($isEdit ? ($product['spec_colors'] ?? '') : '') ?>">
+            </div>
+            <div class="form-group">
+                <label class="form-label">🖨️ Material</label>
+                <input type="text" name="spec_material" class="form-control" placeholder="Ex: PETG Premium"
+                       value="<?= e($isEdit ? ($product['spec_material'] ?? '') : '') ?>">
+            </div>
+            <div class="form-group">
+                <label class="form-label">💡 LED recomendado</label>
+                <input type="text" name="spec_led" class="form-control" placeholder="Ex: Vela LED 3W bivolt"
+                       value="<?= e($isEdit ? ($product['spec_led'] ?? '') : '') ?>">
+            </div>
+            <div class="form-group">
+                <label class="form-label">🚚 Prazo de produção</label>
+                <input type="text" name="spec_production" class="form-control" placeholder="Ex: 5 a 7 dias úteis"
+                       value="<?= e($isEdit ? ($product['spec_production'] ?? '') : '') ?>">
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:var(--space-4);">
+            <label class="form-label">🛡️ Garantia</label>
+            <input type="text" name="spec_warranty" class="form-control" placeholder="Ex: 30 dias contra defeitos de fabricação"
+                   value="<?= e($isEdit ? ($product['spec_warranty'] ?? '') : '') ?>">
+        </div>
+    </details>
+
     <!-- Toggles -->
     <div class="flex gap-6 mb-8">
         <label class="flex gap-2" style="align-items:center; cursor:pointer;">
