@@ -60,6 +60,7 @@ $router->group('admin', 'auth', function ($router) {
     $router->post('/produtos/deletar/{id}', 'AdminProductController', 'delete', 'admin.products.delete');
     $router->post('/produtos/toggle/{id}', 'AdminProductController', 'toggle', 'admin.products.toggle');
     $router->post('/produtos/imagem-deletar/{id}', 'AdminProductController', 'deleteImage', 'admin.products.deleteImage');
+    $router->post('/produtos/imagem-capa/{id}', 'AdminProductController', 'setCover', 'admin.products.setCover');
     $router->post('/produtos/video-deletar/{id}', 'AdminProductController', 'deleteVideo', 'admin.products.deleteVideo');
 
     // Categorias

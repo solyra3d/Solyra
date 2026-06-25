@@ -12,15 +12,19 @@
                         <?php if ($config['type'] === 'textarea'): ?>
                             <textarea id="setting-<?= $key ?>" name="<?= $key ?>" class="form-control" rows="3"><?= e($settings[$key] ?? '') ?></textarea>
                         <?php elseif ($config['type'] === 'file'): ?>
-                            <?php $currentFile = $settings[$key] ?? ''; ?>
+                            <?php $currentFile = $settings[$key] ?? ''; $previewStyle = ($config['preview'] ?? 'circle') === 'rect' ? 'border-radius:8px; width:160px; height:100px; object-fit:cover;' : 'border-radius:50%; width:58px; height:58px; object-fit:contain;'; ?>
                             <?php if ($currentFile): ?>
                                 <div style="margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-3);">
-                                    <img src="<?= e(baseUrl($currentFile)) ?>" alt="Logo atual" style="height: 58px; width: 58px; border-radius: 50%; object-fit: contain; background: var(--color-surface); border: 2px solid var(--color-primary);">
-                                    <span style="color: var(--color-text-muted); font-size: var(--text-sm);">Logo atual</span>
+                                    <img src="<?= e(baseUrl($currentFile)) ?>" alt="Imagem atual" style="<?= $previewStyle ?> background: var(--color-surface); border: 2px solid var(--color-primary);">
+                                    <span style="color: var(--color-text-muted); font-size: var(--text-sm);">Imagem atual</span>
                                 </div>
                             <?php endif; ?>
                             <input type="file" id="setting-<?= $key ?>" name="<?= $key ?>" class="form-control" accept="image/*">
-                            <small style="color: var(--color-text-muted); margin-top: 4px; display: block;">Formatos: PNG, JPG, WEBP. Recomendado: imagem quadrada para melhor resultado redondo.</small>
+                            <?php if (($config['preview'] ?? 'circle') === 'rect'): ?>
+                                <small style="color: var(--color-text-muted); margin-top: 4px; display: block;">Formatos: PNG, JPG, WEBP. Essa imagem aparece no lado direito da hero section na Home.</small>
+                            <?php else: ?>
+                                <small style="color: var(--color-text-muted); margin-top: 4px; display: block;">Formatos: PNG, JPG, WEBP. Recomendado: imagem quadrada para melhor resultado redondo.</small>
+                            <?php endif; ?>
                         <?php else: ?>
                             <input type="<?= $config['type'] ?>" id="setting-<?= $key ?>" name="<?= $key ?>" class="form-control" value="<?= e($settings[$key] ?? '') ?>">
                         <?php endif; ?>

@@ -30,8 +30,9 @@ class AdminSettingController extends Controller
             'google_tag_manager' => ['label' => 'Google Tag Manager ID', 'type' => 'text'],
         ],
         'Aparência' => [
-            'site_logo' => ['label' => 'Logo da Empresa', 'type' => 'file'],
+            'site_logo' => ['label' => 'Logo da Empresa', 'type' => 'file', 'preview' => 'circle'],
             'site_favicon' => ['label' => 'Favicon (URL ou upload)', 'type' => 'text'],
+            'hero_image' => ['label' => 'Imagem Fixa do Hero (Home)', 'type' => 'file', 'preview' => 'rect'],
         ],
     ];
 

@@ -25,7 +25,10 @@
             <div class="hero-visual reveal">
                 <div class="hero-glow"></div>
                 <div class="hero-image-wrapper">
-                    <?php if (!empty($featured) && !empty($featured[0]['cover_image'])): ?>
+                    <?php $heroImg = setting('hero_image'); ?>
+                    <?php if ($heroImg): ?>
+                        <img src="<?= e(baseUrl($heroImg)) ?>" alt="Produto destaque SOLYRA" class="hero-product-img">
+                    <?php elseif (!empty($featured) && !empty($featured[0]['cover_image'])): ?>
                         <img src="<?= e(baseUrl($featured[0]['cover_image'])) ?>" alt="Produto destaque SOLYRA" class="hero-product-img">
                     <?php else: ?>
                         <div class="hero-placeholder">

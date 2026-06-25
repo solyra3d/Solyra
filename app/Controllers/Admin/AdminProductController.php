@@ -276,6 +276,24 @@ class AdminProductController extends Controller
         redirect('/admin/produtos/editar/' . $id);
     }
 
+    public function setCover(string $id): void
+    {
+        $this->validateCsrf();
+
+        $image = Database::fetchOne("SELECT product_id FROM product_images WHERE id = ?", [(int) $id]);
+        if (!$image) {
+            Session::flash('error', 'Imagem não encontrada.');
+            redirect('/admin/produtos');
+        }
+
+        $productId = (int) $image['product_id'];
+        Database::query("UPDATE product_images SET is_cover = 0 WHERE product_id = ?", [$productId]);
+        Database::query("UPDATE product_images SET is_cover = 1 WHERE id = ?", [(int) $id]);
+
+        Session::flash('success', 'Imagem de capa definida com sucesso!');
+        redirect('/admin/produtos/editar/' . $productId);
+    }
+
     public function delete(string $id): void
     {
         $this->validateCsrf();

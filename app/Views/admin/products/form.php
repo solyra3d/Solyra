@@ -144,6 +144,11 @@
                                 onclick="deleteImage('/admin/produtos/imagem-deletar/<?= $img['id'] ?>')">&times;</button>
                         <?php if ($img['is_cover']): ?>
                             <span class="badge badge-gold" style="position:absolute;bottom:4px;left:4px;font-size:10px;">Capa</span>
+                        <?php else: ?>
+                            <form method="POST" action="<?= baseUrl('admin/produtos/imagem-capa/' . $img['id']) ?>" style="position:absolute;bottom:4px;left:4px;">
+                                <?= csrfField() ?>
+                                <button type="submit" style="font-size:10px;padding:2px 7px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:4px;color:var(--color-text-muted);cursor:pointer;">Definir Capa</button>
+                            </form>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
